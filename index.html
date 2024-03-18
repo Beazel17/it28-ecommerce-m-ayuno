@@ -40,54 +40,91 @@
             max-width: 100px;
             max-height: 100px;
         }
+        section {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <nav>
-  <a href="#">Product Inventory</a>
-  <a href="#">Payment & Accounting</a>
-  <a href="#">Logistics</a>
-  <a href="#">Customer Services</a>
-  <a href="#">Reports</a>
+  <a href="#" onclick="showSection('ProductInventory')">Product Inventory</a>
+  <a href="#" onclick="showSection('PaymentAccounting')">Payment & Accounting</a>
+  <a href="#" onclick="showSection('Logistics')">Logistics</a>
+  <a href="#" onclick="showSection('CustomerServices')">Customer Services</a>
+  <a href="#" onclick="showSection('Reports')">Reports</a>
 </nav>
-<section id="Product Inventory"></section>
+
 <div class="content">
-    <div id="product-inventory">
+    <section id="ProductInventory">
+        <h2>Caps</h2>
+        <table>
+          <tr>
+            <th>Product ID</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Image</th>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Nike</td>
+            <td>150.00</td>
+            <td>10</td>
+            <td><img class="product-image" src="https://m.media-amazon.com/images/I/61xgyADdkmL.jpg" alt="Nike Cap"></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Puma</td>
+            <td>180.00</td>
+            <td>20</td>
+            <td><img class="product-image" src="https://m.media-amazon.com/images/I/81NmuY3ePeL.jpg" alt="Puma Cap"></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>New York</td>
+            <td>250.00</td>
+            <td>30</td>
+            <td><img class="product-image" src="https://m.media-amazon.com/images/I/51syxT3tZxL.jpg" alt="New York Cap"></td>
+          </tr>
+        </table>
+    </section>
 
-    <h2>Caps</h2>
+    <section id="PaymentAccounting">
+        <h2>Payment & Accounting</h2>
+        <p>This section contains payment and accounting information.</p>
+        <h3>Payment Information</h3>
+        <p>Here you can find details about payment transactions, invoices, and payment methods.</p>
+        <h3>Accounting Information</h3>
+        <p>Here you can find financial records, balance sheets, income statements, and other accounting details.</p>
+    </section>
+    </section>
 
-    <table>
-      <tr>
-        <th>Product ID</th>
-        <th>Product Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Image</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>Nike</td>
-        <td>150.00</td>
-        <td>10</td>
-        <td><img class="product-image" src="https://m.media-amazon.com/images/I/61xgyADdkmL.jpg" alt="Nike Cap"></td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Puma</td>
-        <td>180.00</td>
-        <td>20</td>
-        <td><img class="product-image" src=https://m.media-amazon.com/images/I/81NmuY3ePeL.jpg alt="Puma Cap"></td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>New York</td>
-        <td>250.00</td>
-        <td>30</td>
-        <td><img class="product-image" src=https://m.media-amazon.com/images/I/51syxT3tZxL.jpg alt="New York Cap"></td>
-      </tr>
-    </table>
+    <section id="Logistics">
+        <h2>Logistics</h2>
+        <p>This section contains logistics information.</p>
+    </section>
+
+    <section id="CustomerServices">
+        <h2>Customer Services</h2>
+        <p>This section contains customer services information.</p>
+    </section>
+
+    <section id="Reports">
+        <h2>Reports</h2>
+        <p>This section contains reports information.</p>
+    </section>
 </div>
-</section>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.querySelectorAll('section');
+        sections.forEach(function(section) {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+</script>
+
 </body>
 </html>
