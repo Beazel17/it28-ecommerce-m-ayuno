@@ -93,7 +93,7 @@
             <td id="quantity_1">10</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/61xgyADdkmL.jpg" alt="Nike Cap"></td>
             <td>
-                <input type="number" id="quantity_input_1" min="1" value="1">
+                <input type="number" id="quantity_input_1" min="1" value="1" onchange="calculateTotalPayment(1)">
                 <button class="buy-btn" onclick="buyProduct(1)">Buy</button>
             </td>
           </tr>
@@ -104,7 +104,7 @@
             <td id="quantity_2">20</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/81NmuY3ePeL.jpg" alt="Puma Cap"></td>
             <td>
-                <input type="number" id="quantity_input_2" min="1" value="1">
+                <input type="number" id="quantity_input_2" min="1" value="1" onchange="calculateTotalPayment(2)">
                 <button class="buy-btn" onclick="buyProduct(2)">Buy</button>
             </td>
           </tr>
@@ -115,7 +115,7 @@
             <td id="quantity_3">30</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/51syxT3tZxL.jpg" alt="New York Cap"></td>
             <td>
-                <input type="number" id="quantity_input_3" min="1" value="1">
+                <input type="number" id="quantity_input_3" min="1" value="1" onchange="calculateTotalPayment(3)">
                 <button class="buy-btn" onclick="buyProduct(3)">Buy</button>
             </td>
           </tr>
@@ -124,86 +124,136 @@
 
     <section id="PaymentAccounting" style="display: none;">
         <h2>Payment & Accounting</h2>
-        <div id="paymentSummary">
-            <h3>Payment Summary</h3>
-            <p>Total Price: $<span id="totalPrice">0.00</span></p>
-            <p>Selected Product: <span id="selectedProduct"></span></p>
+        <div id="paymentForm">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name">
+            <br>
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name">
+            <br>
+            <label for="middle_initial">Middle Initial</label>
+            <input type="text" id="middle_initial" name="middle_initial">
+            <br>
+            <label for="phone_number">Phone Number</label>
+            <input type="text" id="phone_number" name="phone_number">
+            <br>
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address">
+            <br>
+            <label for="product_choice">Product Choice</label>
+            <select id="product_choice" name="product_choice" onchange="calculateTotalPayment()">
+                <option value="Nike">Nike</option>
+                <option value="Puma">Puma</option>
+                <option value="New York">New York</option>
+            </select>
+            <br>
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" min="1" value="1" onchange="calculateTotalPayment()">
+            <br>
+            <label for="total_payment">Total Payment</label>
+            <input type="number" id="total_payment">
+            <br>
+            <label for="payment_choices">Payment Choices</label>
+            <select id="payment_choices" name="payment_choices">
+                <option value="Cash on Delivery (COD)">Cash on Delivery (COD)</option>
+                <option value="Gcash">Gcash</option>
+                <option value="Paymaya">Paymaya</option>
+            </select>
+            <br>
             <button onclick="processPayment()">Proceed to Payment</button>
-            </div>
-            <div id="paymentStatus" style="display: none;">
-                <h3>Payment Status</h3>
-                <p id="paymentMessage"></p>
-            </div>
-        </section>
-    
-    
-        <section id="Logistics">
-            <h2>Logistics</h2>
-            <p>This section contains logistics information.</p>
-        </section>
-    
-        <section id="CustomerServices">
-            <h2>Customer Services</h2>
-            <p>This section contains customer services information.</p>
-        </section>
-    
-        <section id="Reports">
-            <h2>Reports</h2>
-            <p>This section contains reports information.</p>
-        </section>
-    </div>
-    
-    <script>
-        function showSection(sectionId) {
-            var sections = document.querySelectorAll('section');
-            sections.forEach(function(section) {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
+        </div>
+        <p>Total Payment: <span id="total_payment">$0.00</span></p>
+        <div id="paymentStatus" style="display: none;">
+            <h3>Payment Status</h3>
+            <p id="paymentMessage"></p>
+        </div>
+    </section>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        var sections = document.querySelectorAll('section');
+        sections.forEach(function(section) {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function buyProduct(productId) {
+        var quantityInput = document.getElementById('quantity_input_' + productId);
+        var quantity = parseInt(quantityInput.value);
+        var quantityElement = document.getElementById('quantity_' + productId);
+        var currentQuantity = parseInt(quantityElement.textContent);
+        var priceText = document.querySelector('#quantity_' + productId + ' + td').textContent;
+        var price = parseFloat(priceText.replace(/[^\d.]/g, '')); // Remove non-numeric characters
+        var productName = document.querySelector('#quantity_' + productId + ' + td + td').textContent;
+
+        if (quantity > currentQuantity) {
+            console.log("Cannot buy more than available quantity.");
+            return;
         }
-    
-        function buyProduct(productId) {
-            var quantityInput = document.getElementById('quantity_input_' + productId);
-            var quantity = parseInt(quantityInput.value);
-            var quantityElement = document.getElementById('quantity_' + productId);
-            var currentQuantity = parseInt(quantityElement.textContent);
-            var priceText = document.querySelector('#quantity_' + productId + ' + td').textContent;
-            var price = parseFloat(priceText.replace(/[^\d.]/g, '')); // Remove non-numeric characters
-            var productName = document.querySelector('#quantity_' + productId + ' + td + td').textContent;
-    
-            if (quantity > currentQuantity) {
-                console.log("Cannot buy more than available quantity.");
-                return;
-            }
-    
-            if (currentQuantity >= quantity) {
-                quantityElement.textContent = currentQuantity - quantity;
-                var totalPriceElement = document.getElementById('totalPrice');
-                var totalPrice = parseFloat(totalPriceElement.textContent || 0); // Initialize to 0 if empty
-                totalPrice += price * quantity;
-                totalPriceElement.textContent = totalPrice.toFixed(2);
-                console.log(quantity + " units of Product ID " + productId + " has been bought!");
-                showSection('PaymentAccounting'); // Show Payment & Accounting section
-                document.getElementById('selectedProduct').textContent = productName + " (Quantity: " + quantity + ")";
-            } else {
-                console.log("Product ID " + productId + " is out of stock!");
-            }
+
+        if (currentQuantity >= quantity) {
+            quantityElement.textContent = currentQuantity - quantity;
+            var totalPriceElement = document.getElementById('totalPrice');
+            var totalPrice = parseFloat(totalPriceElement.textContent || 0);
+            totalPrice += price * quantity;
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+            console.log(quantity + " units of Product ID " + productId + " has been bought!");
+            showSection('PaymentAccounting'); // Show Payment & Accounting section
+            document.getElementById('selectedProduct').textContent = productName + " (Quantity: " + quantity + ")";
+            // Set the product choice and quantity in the payment form
+            document.getElementById('product_choice').value = productName;
+            document.getElementById('quantity').value = quantity;
+            // Calculate total payment based on the selected product and quantity
+            calculateTotalPayment();
+        } else {
+            console.log("Product ID " + productId + " is out of stock!");
         }
-    
-        function processPayment() {
-            var totalPrice = parseFloat(document.getElementById('totalPrice').textContent);
-            if (isNaN(totalPrice) || totalPrice === 0) {
-                console.log("No products selected for payment.");
-                return;
-            }
-            // Simulate payment processing (for demonstration)
-            var paymentMessageElement = document.getElementById('paymentMessage');
-            paymentMessageElement.textContent = "Payment of $" + totalPrice.toFixed(2) + " processed successfully.";
-            document.getElementById('paymentStatus').style.display = 'block';
+    }
+    function calculateTotalPayment() {
+        var productChoice = document.getElementById('product_choice').value;
+        var quantity = parseInt(document.getElementById('quantity').value);
+        var priceText = '';
+        if (productChoice === 'Nike') {
+            priceText = document.querySelector('#quantity_1 + td').textContent;
+        } else if (productChoice === 'Puma') {
+            priceText = document.querySelector('#quantity_2 + td').textContent;
+        } else if (productChoice === 'New York') {
+            priceText = document.querySelector('#quantity_3 + td').textContent;
         }
-    </script>
-    
-    
-    </body>
-    </html>
-    
+        var price = parseFloat(priceText.replace(/[^\d.]/g, '')); // Remove non-numeric characters
+        var totalPayment = price * quantity;
+        document.getElementById('total_payment').value = totalPayment.toFixed(2);
+        document.getElementById('display_total_payment').textContent = "$" + totalPayment.toFixed(2);
+    }
+
+    // Call calculateTotalPayment when quantity or product choice changes
+    document.getElementById('quantity').addEventListener('change', calculateTotalPayment);
+    document.getElementById('product_choice').addEventListener('change', calculateTotalPayment);
+
+
+    function proceedToPayment() {
+        var quantity = parseInt(document.getElementById('quantity').value);
+        var price = parseFloat(document.querySelector('#quantity_1 + td').textContent.replace(/[^\d.]/g, ''));
+        var totalPayment = quantity * price;
+        document.getElementById('total_payment').value = totalPayment.toFixed(2);
+        document.getElementById('display_total_payment').textContent = "$" + totalPayment.toFixed(2);
+
+        var paymentMethod = document.getElementById('payment_choices').value;
+        if (isNaN(totalPayment) || totalPayment <= 0) {
+            console.log("Invalid total payment amount.");
+            return;
+        }
+        // Simulate payment processing (for demonstration)
+        var paymentMessageElement = document.getElementById('paymentMessage');
+        paymentMessageElement.textContent = "Payment of $" + totalPayment.toFixed(2) + " via " + paymentMethod + " processed successfully.";
+        document.getElementById('paymentStatus').style.display = 'block';
+        // Navigate to Logistics section
+        showSection('Logistics');
+    }
+</script>
+
+
+</body>
+</html>
