@@ -5,43 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Inventory</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        nav {
+            background-color: #ee4d2d;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        nav a:hover {
+            background-color: #ff6e4a;
+        }
+        .content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h2 {
+            margin-top: 0;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
             text-align: left;
         }
         th {
             background-color: #f2f2f2;
         }
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        .content {
-            padding: 20px;
-        }
         .product-image {
-            max-width: 100px;
-            max-height: 100px;
+            max-width: 80px;
+            max-height: 80px;
+            display: block;
+            margin: 0 auto;
         }
-        section {
-            display: none;
+        .buy-btn {
+            background-color: #ee4d2d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        .buy-btn:hover {
+            background-color: #ff6e4a;
         }
     </style>
 </head>
@@ -65,66 +84,126 @@
             <th>Price</th>
             <th>Quantity</th>
             <th>Image</th>
+            <th>Action</th>
           </tr>
           <tr>
             <td>1</td>
             <td>Nike</td>
-            <td>150.00</td>
-            <td>10</td>
+            <td>$150</td>
+            <td id="quantity_1">10</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/61xgyADdkmL.jpg" alt="Nike Cap"></td>
+            <td>
+                <input type="number" id="quantity_input_1" min="1" value="1">
+                <button class="buy-btn" onclick="buyProduct(1)">Buy</button>
+            </td>
           </tr>
           <tr>
             <td>2</td>
             <td>Puma</td>
-            <td>180.00</td>
-            <td>20</td>
+            <td>$180</td>
+            <td id="quantity_2">20</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/81NmuY3ePeL.jpg" alt="Puma Cap"></td>
+            <td>
+                <input type="number" id="quantity_input_2" min="1" value="1">
+                <button class="buy-btn" onclick="buyProduct(2)">Buy</button>
+            </td>
           </tr>
           <tr>
             <td>3</td>
             <td>New York</td>
-            <td>250.00</td>
-            <td>30</td>
+            <td>$250</td>
+            <td id="quantity_3">30</td>
             <td><img class="product-image" src="https://m.media-amazon.com/images/I/51syxT3tZxL.jpg" alt="New York Cap"></td>
+            <td>
+                <input type="number" id="quantity_input_3" min="1" value="1">
+                <button class="buy-btn" onclick="buyProduct(3)">Buy</button>
+            </td>
           </tr>
         </table>
     </section>
 
-    <section id="PaymentAccounting">
+    <section id="PaymentAccounting" style="display: none;">
         <h2>Payment & Accounting</h2>
-        <p>This section contains payment and accounting information.</p>
-        <h3>Payment Information</h3>
-        <p>Here you can find details about payment transactions, invoices, and payment methods.</p>
-        <h3>Accounting Information</h3>
-        <p>Here you can find financial records, balance sheets, income statements, and other accounting details.</p>
-    </section>
-    </section>
-
-    <section id="Logistics">
-        <h2>Logistics</h2>
-        <p>This section contains logistics information.</p>
-    </section>
-
-    <section id="CustomerServices">
-        <h2>Customer Services</h2>
-        <p>This section contains customer services information.</p>
-    </section>
-
-    <section id="Reports">
-        <h2>Reports</h2>
-        <p>This section contains reports information.</p>
-    </section>
-</div>
-
-<script>
-    function showSection(sectionId) {
-        var sections = document.querySelectorAll('section');
-        sections.forEach(function(section) {
-            section.style.display = 'none';
-        });
-        document.getElementById(sectionId).style.display = 'block';
-    }
-</script>
-
-</body>
-</html>
+        <div id="paymentSummary">
+            <h3>Payment Summary</h3>
+            <p>Total Price: $<span id="totalPrice">0.00</span></p>
+            <p>Selected Product: <span id="selectedProduct"></span></p>
+            <button onclick="processPayment()">Proceed to Payment</button>
+            </div>
+            <div id="paymentStatus" style="display: none;">
+                <h3>Payment Status</h3>
+                <p id="paymentMessage"></p>
+            </div>
+        </section>
+    
+    
+        <section id="Logistics">
+            <h2>Logistics</h2>
+            <p>This section contains logistics information.</p>
+        </section>
+    
+        <section id="CustomerServices">
+            <h2>Customer Services</h2>
+            <p>This section contains customer services information.</p>
+        </section>
+    
+        <section id="Reports">
+            <h2>Reports</h2>
+            <p>This section contains reports information.</p>
+        </section>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            var sections = document.querySelectorAll('section');
+            sections.forEach(function(section) {
+                section.style.display = 'none';
+            });
+            document.getElementById(sectionId).style.display = 'block';
+        }
+    
+        function buyProduct(productId) {
+            var quantityInput = document.getElementById('quantity_input_' + productId);
+            var quantity = parseInt(quantityInput.value);
+            var quantityElement = document.getElementById('quantity_' + productId);
+            var currentQuantity = parseInt(quantityElement.textContent);
+            var priceText = document.querySelector('#quantity_' + productId + ' + td').textContent;
+            var price = parseFloat(priceText.replace(/[^\d.]/g, '')); // Remove non-numeric characters
+            var productName = document.querySelector('#quantity_' + productId + ' + td + td').textContent;
+    
+            if (quantity > currentQuantity) {
+                console.log("Cannot buy more than available quantity.");
+                return;
+            }
+    
+            if (currentQuantity >= quantity) {
+                quantityElement.textContent = currentQuantity - quantity;
+                var totalPriceElement = document.getElementById('totalPrice');
+                var totalPrice = parseFloat(totalPriceElement.textContent || 0); // Initialize to 0 if empty
+                totalPrice += price * quantity;
+                totalPriceElement.textContent = totalPrice.toFixed(2);
+                console.log(quantity + " units of Product ID " + productId + " has been bought!");
+                showSection('PaymentAccounting'); // Show Payment & Accounting section
+                document.getElementById('selectedProduct').textContent = productName + " (Quantity: " + quantity + ")";
+            } else {
+                console.log("Product ID " + productId + " is out of stock!");
+            }
+        }
+    
+        function processPayment() {
+            var totalPrice = parseFloat(document.getElementById('totalPrice').textContent);
+            if (isNaN(totalPrice) || totalPrice === 0) {
+                console.log("No products selected for payment.");
+                return;
+            }
+            // Simulate payment processing (for demonstration)
+            var paymentMessageElement = document.getElementById('paymentMessage');
+            paymentMessageElement.textContent = "Payment of $" + totalPrice.toFixed(2) + " processed successfully.";
+            document.getElementById('paymentStatus').style.display = 'block';
+        }
+    </script>
+    
+    
+    </body>
+    </html>
+    
